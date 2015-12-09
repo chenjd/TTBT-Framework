@@ -1,4 +1,4 @@
-﻿#region License
+#region License
 /*
  * The MIT License
  *
@@ -32,113 +32,114 @@ namespace TTBT
 {
 	public abstract class BaseNode
 	{
-		#region Private Fields
+	  	#region Private Fields
 
-		private Guid _id;
-		private List<BaseNode> _children;
+	  	private Guid _id;
+	  	private List<BaseNode> _children;
 
-		#endregion
+	  	#endregion
 
-		#region public Constructor
+	  	#region public Constructor
 
-        public BaseNode() : this(new List<BaseNode>())
-        {
-        }
+	    public BaseNode() : this(new List<BaseNode>())
+	    {
+	    }
 
-		public BaseNode(List<BaseNode> children)
-		{
-			this._id = Utilities.CreateUUID();
-			this._children = children != null ? children : new List<BaseNode>();
-		}
+	  	public BaseNode(List<BaseNode> children)
+	  	{
+	  		this._id = Utilities.CreateUUID();
+	  		this._children = children != null ? children : new List<BaseNode>();
+	  	}
 
-		#endregion
+	  	#endregion
 
-		#region Public Methods
-        
-        //Enter Node -----> Open Node(maybe Running) -----> Tick Node(excute the logic) -----> Close Node(if not Running) -----> Exit Node
-        public virtual NodeState Excute(Tick tick)
-        {
-          //Enter Node
-          this.Enter(tick);
+	  	#region Public Methods
+	        
+	    //Enter Node -----> Open Node(maybe Running) -----> Tick Node(excute the logic) -----> Close Node(if not Running) -----> Exit Node
+	    public virtual NodeState Excute(Tick tick)
+	    {
+	      	//Enter Node
+	      	this.Enter(tick);
 
-          //Open Node If current Node isnt in blackboard storage
-          if(tick.Blackboard.GetNode(tick.Tree.UID, this._id) == null)
-              this.Open(tick);
+	      	//Open Node If current Node isnt in blackboard storage
+	      	if(tick.Blackboard.GetNode(tick.Tree.UID, this._id) == null)
+	          	this.Open(tick);
 
-          //Tick Node, get the status
-          NodeState status = this.Tick(tick);
+	      	//Tick Node, get the status
+	      	NodeState status = this.Tick(tick);
 
-          //Close Node, if not running depends on status
-          if( status != NodeState.RUNNING )
-            this.Close(tick);
+	      	//Close Node, if not running depends on status
+	      	if( status != NodeState.RUNNING )
+	        	this.Close(tick);
 
-          //Exit Node
-          this.Exit(tick);
+	      	//Exit Node
+	      	this.Exit(tick);
 
-          //return result
-          return status;
-        }
+	      	//return result
+	      	return status;
+	    }
 
-        #endregion
+	    #endregion
 
-        #region Private Methods
+	    #region Private Methods
 
-        private void Enter(Tick tick)
-        { 
-            //TODO
-          if(tick == null)
-            return;
-          tick.EnterNode(this);
-        }
+	    private void Enter(Tick tick)
+	    { 
+	        //TODO
+	      	if(tick == null)
+	        	return;
+	      	tick.EnterNode(this);
+	    }
 
-        private void Open(Tick tick)
-        {
-            //TODO
-          if(tick == null)
-            return;
-          tick.OpenNode(this);
-        }
+	    private void Open(Tick tick)
+	    {
+	        //TODO
+	      	if(tick == null)
+	        	return;
+	      	tick.OpenNode(this);
+	    }
 
-        protected virtual NodeState Tick(Tick tick)
-        {
-          //TODO
-          return NodeState.SUCCESS;
-        }
+	    protected virtual NodeState Tick(Tick tick)
+	    {
+	      	//TODO
+	      	return NodeState.SUCCESS;
+	    }
 
-        private void Exit(Tick tick)
-        {
-          if(tick == null)
-            return;
-          tick.ExitNode(this);
-        }
+	    private void Exit(Tick tick)
+	    {
+	      	if(tick == null)
+	        	return;
+	      	tick.ExitNode(this);
+	    }
 
-        private void Close(Tick tick)
-        {
-          if(tick == null)
-            return;
-          tick.CloseNode(this);
-        }
+	    private void Close(Tick tick)
+	    {
+	      	if(tick == null)
+	        	return;
+	      	tick.CloseNode(this);
+	    }
 
-		#endregion
+	    #endregion
 
-        #region Public Properties
+	    #region Public Properties
 
-        public List<BaseNode> Children
-        {
-          get
-          {
-            return this._children;
-          }
-        }
+	    public List<BaseNode> Children
+	    {
+	      	get
+	      	{
+	        	return this._children;
+	      	}
+	    }
 
-        public Guid UID
-        {
-          get
-          {
-            return this._id;
-          }
-        }
+	    public Guid UID
+	    {
+	      	get
+	      	{
+	        	return this._id;
+	      	}
+	    }
 
-        #endregion
+	    #endregion
+	    
 	}
 }
